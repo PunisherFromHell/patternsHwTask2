@@ -43,16 +43,21 @@ class AuthTest {
     @DisplayName("Should get error message if login with not registered user")
     void shouldGetErrorIfNotRegisteredUser() {
         var notRegisteredUser = getUser("active");
-        // TODO: добавить логику теста в рамках которого будет выполнена попытка входа в личный кабинет
-        //  незарегистрированного пользователя, для заполнения полей формы используйте пользователя notRegisteredUser
+        $(loginSelector).setValue(notRegisteredUser.getLogin());
+        $(passwordSelector).setValue(notRegisteredUser.getPassword());
+        $(buttonSelector).click();
+        $(errorMsgSelector).shouldBe(visible).shouldHave(text(errorMsg));
     }
 
     @Test
     @DisplayName("Should get error message if login with blocked registered user")
     void shouldGetErrorIfBlockedUser() {
         var blockedUser = getRegisteredUser("blocked");
-        // TODO: добавить логику теста в рамках которого будет выполнена попытка входа в личный кабинет,
-        //  заблокированного пользователя, для заполнения полей формы используйте пользователя blockedUser
+        $(loginSelector).setValue(blockedUser.getLogin());
+        $(passwordSelector).setValue(blockedUser.getPassword());
+        $(buttonSelector).click();
+        $(errorMsgSelector).shouldBe(visible).shouldHave(text("Ошибка! Пользователь заблокирован"));
+
     }
 
     @Test
@@ -60,9 +65,10 @@ class AuthTest {
     void shouldGetErrorIfWrongLogin() {
         var registeredUser = getRegisteredUser("active");
         var wrongLogin = getRandomLogin();
-        // TODO: добавить логику теста в рамках которого будет выполнена попытка входа в личный кабинет с неверным
-        //  логином, для заполнения поля формы "Логин" используйте переменную wrongLogin,
-        //  "Пароль" - пользователя registeredUser
+        $(loginSelector).setValue(wrongLogin);
+        $(passwordSelector).setValue(registeredUser.getPassword());
+        $(buttonSelector).click();
+        $(errorMsgSelector).shouldBe(visible).shouldHave(text(errorMsg));
     }
 
     @Test
@@ -70,8 +76,9 @@ class AuthTest {
     void shouldGetErrorIfWrongPassword() {
         var registeredUser = getRegisteredUser("active");
         var wrongPassword = getRandomPassword();
-        // TODO: добавить логику теста в рамках которого будет выполнена попытка входа в личный кабинет с неверным
-        //  паролем, для заполнения поля формы "Логин" используйте пользователя registeredUser,
-        //  "Пароль" - переменную wrongPassword
+        $(loginSelector).setValue(registeredUser.getLogin());
+        $(passwordSelector).setValue(wrongPassword);
+        $(buttonSelector).click();
+        $(errorMsgSelector).shouldBe(visible).shouldHave(text(errorMsg));
     }
 }
